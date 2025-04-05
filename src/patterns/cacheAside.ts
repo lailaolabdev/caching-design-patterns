@@ -17,6 +17,8 @@ export const getProducts = async (req: Request, res: Response): Promise<any> => 
     //step3: if data not in cache, fetch data from database
     const products = await ProductModel.find();
 
+    await redisClient.del(cacheKey);
+
     //step4: set data to cache
     await redisClient.setex(cacheKey, 60, JSON.stringify(products));
     return res.json(products);
