@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import swaggerJs from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import cron from "node-cron";
-import { getProducts } from "./patterns/cacheAside";
+import { cacheAside, getProducts } from "./patterns/cacheAside";
 import swaggerDoc from "./swagger";
 import { writeThrough } from "./patterns/writeThrough";
 import { syncCacheToDB, writeBack } from "./patterns/writeBack";
@@ -24,6 +24,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Route
 app.get("/products", getProducts);
+app.post("/cache-aside", cacheAside);
 app.post("/write-through", writeThrough);
 app.post("/write-back", writeBack);
 

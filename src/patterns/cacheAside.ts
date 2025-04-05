@@ -65,3 +65,65 @@ export const getProducts = async (req: Request, res: Response): Promise<any> => 
  *       404:
  *         description: Products not found if the database is empty (if applicable).
  */
+
+export const cacheAside = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const product = await ProductModel.create(req.body);
+    return res.status(201).json(product);
+  } catch {
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * @swagger
+ * /cache-aside:
+ *   post:
+ *     summary: Create a new product
+ *     description: Create a new product and store it in the database (write-through/write-back/caching strategy can be applied separately).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - price
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the product.
+ *                 example: "Wireless Mouse"
+ *               description:
+ *                 type: string
+ *                 description: A short description of the product.
+ *                 example: "A high-quality wireless mouse"
+ *     responses:
+ *       201:
+ *         description: Product created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: Unique identifier of the created product.
+ *                 name:
+ *                   type: string
+ *                   description: Name of the product.
+ *                 description:
+ *                   type: string
+ *                   description: Product description.
+ *       500:
+ *         description: Internal server error, something went wrong while creating the product.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal Server Error"
+ */
